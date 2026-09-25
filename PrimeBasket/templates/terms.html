@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | Terms & Conditions{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container text-center">
+    <h1 class="fw-bold">Terms &amp; Conditions</h1>
+    <p class="text-muted">Last updated: September 2026</p>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="card border-0 shadow-sm p-4 p-md-5">
+          <h5 class="fw-bold">1. Using PrimeBasket</h5>
+          <p class="text-muted">By creating an account and placing orders on PrimeBasket, you agree to provide accurate information and to use the site only for lawful personal or household shopping.</p>
+
+          <h5 class="fw-bold mt-4">2. Orders &amp; Pricing</h5>
+          <p class="text-muted">Product prices, discounts, and availability are shown at the time of browsing and may change before you check out. Placing an order is an offer to purchase, which we confirm once your order is placed successfully.</p>
+
+          <h5 class="fw-bold mt-4">3. Delivery</h5>
+          <p class="text-muted">Delivery times shown at checkout are estimates. A flat delivery fee applies to orders below our free-delivery threshold, shown clearly before you place your order.</p>
+
+          <h5 class="fw-bold mt-4">4. Payments</h5>
+          <p class="text-muted">You may pay via Cash on Delivery or Credit/Debit card. Choosing "Card" records your intent to pay by card; no card details are collected or stored by this site.</p>
+
+          <h5 class="fw-bold mt-4">5. Cancellations</h5>
+          <p class="text-muted">Orders can be cancelled from your Order History while their status is "Placed" or "Processing." Once an order is out for delivery, it can no longer be cancelled through the site.</p>
+
+          <h5 class="fw-bold mt-4">6. Account Responsibility</h5>
+          <p class="text-muted mb-0">You're responsible for keeping your account password secure. Contact us immediately via our <a href="{% url 'contact' %}">Contact page</a> if you suspect unauthorized access to your account.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

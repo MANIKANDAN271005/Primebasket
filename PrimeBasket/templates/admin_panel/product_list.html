@@ -1,0 +1,64 @@
+{% extends "admin_panel/admin_base.html" %}
+
+{% block title %}PrimeBasket Admin | Products{% endblock %}
+
+{% block admin_content %}
+<div class="admin-page-heading">
+  <div>
+    <h1>Products</h1>
+    <p class="text-muted mb-0">{{ products|length }} product{{ products|length|pluralize }} in the catalog.</p>
+  </div>
+  <a href="{% url 'admin_product_add' %}" class="btn btn-success"><i class="bi bi-plus-circle me-2"></i>Add Product</a>
+</div>
+
+<div class="admin-card">
+  {% if products %}
+  <div class="table-responsive">
+    <table class="table align-middle admin-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td><img src="{{ product.image_url }}" alt="{{ product.name }}" /></td>
+          <td class="fw-semibold">{{ product.name }}</td>
+          <td>{{ product.category }}</td>
+          <td>${{ product.price }}</td>
+          <td>{{ product.stock_qty }}</td>
+          <td>
+            {% if product.in_stock %}
+            <span class="badge bg-success-subtle text-success">In Stock</span>
+            {% else %}
+            <span class="badge bg-danger-subtle text-danger">Out of Stock</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="admin-row-actions justify-content-end">
+              <a href="{% url 'admin_product_edit' product.id %}" class="btn btn-sm btn-outline-success" aria-label="Edit {{ product.name }}">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <form method="post" action="{% url 'admin_product_delete' product.id %}" onsubmit="return confirm('Delete this product? This cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete {{ product.name }}"><i class="bi bi-trash-fill"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted mb-0">No products yet. <a href="{% url 'admin_product_add' %}">Add your first product</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

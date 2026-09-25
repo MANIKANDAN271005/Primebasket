@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | My Profile{% endblock %}
+
+{% block content %}
+<section class="py-5" id="profile">
+  <div class="container">
+    <div class="row justify-content-center g-4">
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-4">
+              <i class="bi bi-person-circle text-success" style="font-size: 4rem;"></i>
+              <h2 class="fw-bold mt-3 mb-0">{{ profile_user.fullname }}</h2>
+              <p class="text-muted">Your PrimeBasket account details</p>
+            </div>
+
+            <ul class="list-group list-group-flush mb-4" id="profileView">
+              <li class="list-group-item d-flex align-items-center gap-3">
+                <i class="bi bi-person-fill text-success"></i>
+                <div>
+                  <div class="text-muted small">Full name</div>
+                  <div class="fw-semibold" id="viewFullname">{{ profile_user.fullname }}</div>
+                </div>
+              </li>
+              <li class="list-group-item d-flex align-items-center gap-3">
+                <i class="bi bi-envelope-fill text-success"></i>
+                <div>
+                  <div class="text-muted small">Email address</div>
+                  <div class="fw-semibold">{{ profile_user.email }}</div>
+                </div>
+              </li>
+              <li class="list-group-item d-flex align-items-center gap-3">
+                <i class="bi bi-telephone-fill text-success"></i>
+                <div>
+                  <div class="text-muted small">Phone number</div>
+                  <div class="fw-semibold" id="viewPhone">{{ profile_user.phone }}</div>
+                </div>
+              </li>
+            </ul>
+
+            <form id="editProfileForm" class="d-none mb-4" novalidate>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="editFullname" class="form-label">Full name</label>
+                <input type="text" class="form-control" id="editFullname" name="fullname" value="{{ profile_user.fullname }}" required />
+              </div>
+              <div class="mb-3">
+                <label for="editPhone" class="form-label">Phone number</label>
+                <input type="tel" class="form-control" id="editPhone" name="phone" value="{{ profile_user.phone }}" required />
+              </div>
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success flex-fill">Save changes</button>
+                <button type="button" id="cancelEditProfile" class="btn btn-outline-secondary flex-fill">Cancel</button>
+              </div>
+              <div id="editProfileMessage" class="form-text mt-2" aria-live="polite"></div>
+            </form>
+
+            <div class="d-flex flex-column gap-2">
+              <a href="{% url 'orders' %}" class="btn btn-outline-success w-100">
+                <i class="bi bi-bag-check-fill me-2"></i>My Orders
+              </a>
+              <button type="button" id="showEditProfile" class="btn btn-outline-success w-100">
+                <i class="bi bi-pencil-fill me-2"></i>Edit Profile
+              </button>
+
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger w-100">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </button>
+              </form>
+
+              <button type="button" id="deleteAccountBtn" class="btn btn-danger w-100">
+                <i class="bi bi-trash-fill me-2"></i>Delete Account
+              </button>
+              <div id="deleteAccountMessage" class="form-text mt-2" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body p-4 p-md-5">
+            <h4 class="fw-bold mb-3">Change Password</h4>
+            <form id="changePasswordForm" novalidate>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label">Current password</label>
+                <input type="password" class="form-control" id="currentPassword" required />
+              </div>
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New password</label>
+                <input type="password" class="form-control" id="newPassword" required />
+              </div>
+              <div class="mb-3">
+                <label for="confirmNewPassword" class="form-label">Confirm new password</label>
+                <input type="password" class="form-control" id="confirmNewPassword" required />
+              </div>
+              <button type="submit" class="btn btn-success w-100">Update Password</button>
+              <div id="changePasswordMessage" class="form-text mt-2" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body p-4 p-md-5">
+            <h4 class="fw-bold mb-3">Saved Addresses</h4>
+            <div id="addressList" class="d-flex flex-column gap-2 mb-3">
+              {% for addr in profile_user.addresses %}
+              <div class="border rounded-4 p-3 d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <strong>{{ addr.full_name }}</strong> &middot; {{ addr.phone }}<br />
+                  <span class="text-muted small">{{ addr.line1 }}, {{ addr.city }}, {{ addr.state }} {{ addr.postal_code }}</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger delete-address-btn" data-address-id="{{ addr.id }}">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              {% empty %}
+              <p class="text-muted mb-0" id="noAddressesMessage">No saved addresses yet. Add one below or during checkout.</p>
+              {% endfor %}
+            </div>
+
+            <button type="button" id="showAddAddress" class="btn btn-outline-success w-100 mb-3">
+              <i class="bi bi-plus-circle me-2"></i>Add New Address
+            </button>
+
+            <form id="addAddressForm" class="row g-3 d-none" novalidate>
+              {% csrf_token %}
+              <div class="col-md-6">
+                <label class="form-label">Full name</label>
+                <input type="text" class="form-control" id="newAddrFullName" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone number</label>
+                <input type="tel" class="form-control" id="newAddrPhone" />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Address line</label>
+                <input type="text" class="form-control" id="newAddrLine1" placeholder="House / street / area" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" id="newAddrCity" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control" id="newAddrState" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Postal code</label>
+                <input type="text" class="form-control" id="newAddrPostalCode" />
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-success w-100">Save Address</button>
+              </div>
+              <div id="addAddressMessage" class="form-text" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

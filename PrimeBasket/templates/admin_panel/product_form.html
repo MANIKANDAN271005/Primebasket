@@ -1,0 +1,104 @@
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket Admin | {% if product %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block admin_content %}
+<div class="admin-page-heading">
+  <div>
+    <h1>{% if product %}Edit Product{% else %}Add Product{% endif %}</h1>
+    <p class="text-muted mb-0">{% if product %}Update details, stock, price, or image.{% else %}New products appear on the customer site immediately.{% endif %}</p>
+  </div>
+  <a href="{% url 'admin_products' %}" class="btn btn-outline-success"><i class="bi bi-arrow-left me-2"></i>Back to Products</a>
+</div>
+
+<div class="admin-card">
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Product name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ product.name|default:'' }}" required />
+          </div>
+          <div class="col-md-6">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+              <option value="">Choose a category</option>
+              {% for cat in categories %}
+              <option value="{{ cat }}" {% if product.category == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="price" class="form-label">Price ($)</label>
+            <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" value="{{ product.price|default:'' }}" required />
+          </div>
+          <div class="col-md-4">
+            <label for="old_price" class="form-label">Original price ($) <span class="text-muted small">(optional)</span></label>
+            <input type="number" step="0.01" min="0" class="form-control" id="old_price" name="old_price" value="{{ product.old_price|default:'' }}" />
+          </div>
+          <div class="col-md-4">
+            <label for="unit" class="form-label">Unit</label>
+            <input type="text" class="form-control" id="unit" name="unit" value="{{ product.unit|default:'EA' }}" placeholder="KG, L, EA, PK..." required />
+          </div>
+          <div class="col-md-6">
+            <label for="stock_qty" class="form-label">Stock quantity</label>
+            <input type="number" min="0" class="form-control" id="stock_qty" name="stock_qty" value="{{ product.stock_qty|default:'0' }}" required />
+            <div class="form-text">0 automatically marks the product Out of Stock.</div>
+          </div>
+          <div class="col-12">
+            <label for="short_description" class="form-label">Short description <span class="text-muted small">(shown on product cards)</span></label>
+            <input type="text" class="form-control" id="short_description" name="short_description" value="{{ product.short_description|default:'' }}" maxlength="120" />
+          </div>
+          <div class="col-12">
+            <label for="description" class="form-label">Full description</label>
+            <textarea class="form-control" id="description" name="description" rows="4">{{ product.description|default:'' }}</textarea>
+          </div>
+          <div class="col-12">
+            <label for="highlights" class="form-label">Highlights <span class="text-muted small">(one per line, optional)</span></label>
+            <textarea class="form-control" id="highlights" name="highlights" rows="3">{{ product.highlights|default:'' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <label class="form-label">Product image</label>
+        <div class="mb-3">
+          <img src="{% if product.image_url %}{{ product.image_url }}{% else %}{% static 'images/products/placeholder.jpg' %}{% endif %}" alt="Current image" class="admin-image-preview" id="imagePreview" />
+        </div>
+        <div class="mb-3">
+          <label for="image_file" class="form-label small">Upload a file</label>
+          <input type="file" class="form-control" id="image_file" name="image_file" accept="image/png,image/jpeg,image/webp,image/gif" />
+        </div>
+        <div class="text-center text-muted small mb-3">or</div>
+        <div class="mb-3">
+          <label for="image_url" class="form-label small">Paste an image URL</label>
+          <input type="url" class="form-control" id="image_url" name="image_url" placeholder="https://..." />
+        </div>
+        {% if product %}
+        <div class="form-text">Leave both blank to keep the current image.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="my-4" />
+    <div class="d-flex flex-wrap gap-2">
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-check-circle-fill me-2"></i>{% if product %}Save Changes{% else %}Add Product{% endif %}
+      </button>
+      <a href="{% url 'admin_products' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('image_file')?.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById('imagePreview');
+    if (preview) preview.src = URL.createObjectURL(file);
+  });
+</script>
+{% endblock %}

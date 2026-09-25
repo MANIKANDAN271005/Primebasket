@@ -1,0 +1,52 @@
+{% extends "admin_panel/admin_base.html" %}
+
+{% block title %}PrimeBasket Admin | Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="admin-page-heading">
+  <div>
+    <h1>Dashboard</h1>
+    <p class="text-muted mb-0">Welcome back, {{ admin_username }}.</p>
+  </div>
+  <a href="{% url 'admin_product_add' %}" class="btn btn-success"><i class="bi bi-plus-circle me-2"></i>Add Product</a>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-3 col-sm-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-value">{{ product_count }}</div>
+      <div class="admin-stat-label">Products</div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-value">{{ category_count }}</div>
+      <div class="admin-stat-label">Categories</div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-value">{{ out_of_stock_count }}</div>
+      <div class="admin-stat-label">Out of Stock</div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-value">{{ order_count }}</div>
+      <div class="admin-stat-label">Orders Placed</div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card">
+  <h5 class="fw-bold mb-3">Quick Actions</h5>
+  <div class="d-flex flex-wrap gap-3">
+    <a href="{% url 'admin_product_add' %}" class="btn btn-outline-success"><i class="bi bi-plus-circle me-2"></i>Add a Product</a>
+    <a href="{% url 'admin_products' %}" class="btn btn-outline-success"><i class="bi bi-box-seam me-2"></i>Manage Products</a>
+    <a href="{% url 'admin_categories' %}" class="btn btn-outline-success"><i class="bi bi-tags me-2"></i>Manage Categories</a>
+  </div>
+  <p class="text-muted small mt-3 mb-0">
+    Registered customers: {{ user_count }}. Products you add or edit here appear on the customer site immediately.
+  </p>
+</div>
+{% endblock %}

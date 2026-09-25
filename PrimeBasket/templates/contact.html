@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | Contact Us{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container text-center">
+    <h1 class="fw-bold">Contact Us</h1>
+    <p class="text-muted">Questions, feedback, or an order issue -- we're happy to help.</p>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 h-100">
+          <h5 class="fw-bold mb-3">Get in Touch</h5>
+          <p class="d-flex align-items-center gap-2 text-muted"><i class="bi bi-geo-alt text-success"></i>123 Fresh Street, Nairobi</p>
+          <p class="d-flex align-items-center gap-2 text-muted"><i class="bi bi-envelope text-success"></i>support@primebasket.com</p>
+          <p class="d-flex align-items-center gap-2 text-muted"><i class="bi bi-telephone text-success"></i>+254 700 000 000</p>
+          <p class="d-flex align-items-center gap-2 text-muted mb-0"><i class="bi bi-clock text-success"></i>Mon - Sat, 8am - 8pm</p>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4">
+          <h5 class="fw-bold mb-3">Send a Message</h5>
+          <form id="contactForm" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="contactName" class="form-label">Your name</label>
+                <input type="text" class="form-control" id="contactName" required />
+              </div>
+              <div class="col-md-6">
+                <label for="contactEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="contactEmail" required />
+              </div>
+              <div class="col-12">
+                <label for="contactSubject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="contactSubject" placeholder="e.g. Order question" />
+              </div>
+              <div class="col-12">
+                <label for="contactMessage" class="form-label">Message</label>
+                <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-4">
+              <i class="bi bi-send-fill me-2"></i>Send Message
+            </button>
+            <div id="contactMessageStatus" class="form-text mt-2" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

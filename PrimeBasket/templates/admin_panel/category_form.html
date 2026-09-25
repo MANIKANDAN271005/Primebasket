@@ -1,0 +1,61 @@
+{% extends "admin_panel/admin_base.html" %}
+
+{% block title %}PrimeBasket Admin | Edit Category{% endblock %}
+
+{% block admin_content %}
+<div class="admin-page-heading">
+  <div>
+    <h1>Edit Category</h1>
+    <p class="text-muted mb-0">Renaming a category also moves all of its products to the new name.</p>
+  </div>
+  <a href="{% url 'admin_categories' %}" class="btn btn-outline-success"><i class="bi bi-arrow-left me-2"></i>Back to Categories</a>
+</div>
+
+<div class="admin-card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ category.name }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Short description <span class="text-muted small">(shown on the homepage card)</span></label>
+          <input type="text" class="form-control" id="description" name="description" maxlength="90" value="{{ category.description }}" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <label class="form-label">Category photo</label>
+        <div class="mb-3">
+          <img src="{{ category.image_url }}" alt="{{ category.name }}" class="admin-image-preview" id="imagePreview" />
+        </div>
+        <div class="mb-3">
+          <label for="image_file" class="form-label small">Upload a new photo</label>
+          <input type="file" class="form-control" id="image_file" name="image_file" accept="image/png,image/jpeg,image/webp,image/gif" />
+        </div>
+        <div class="mb-3">
+          <label for="image_url" class="form-label small">or paste an image URL</label>
+          <input type="url" class="form-control" id="image_url" name="image_url" placeholder="https://..." />
+        </div>
+        <div class="form-text">Leave both blank to keep the current photo.</div>
+      </div>
+    </div>
+
+    <hr class="my-4" />
+    <div class="d-flex flex-wrap gap-2">
+      <button type="submit" class="btn btn-success"><i class="bi bi-check-circle-fill me-2"></i>Save Changes</button>
+      <a href="{% url 'admin_categories' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('image_file')?.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById('imagePreview');
+    if (preview) preview.src = URL.createObjectURL(file);
+  });
+</script>
+{% endblock %}

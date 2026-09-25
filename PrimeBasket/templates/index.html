@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | Fresh Grocery Landing Page{% endblock %}
+
+{% block content %}
+<section class="hero-section py-5" id="home">
+  <div class="container">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row align-items-center g-4 g-lg-5 hero-slide">
+            <div class="col-12 col-lg-6 order-2 order-lg-1 hero-copy">
+              <span class="hero-badge mb-3">Fresh Today</span>
+              <h1 class="display-4 fw-bold mb-3">Fresh groceries, delivered with care.</h1>
+              <p class="lead text-muted mb-4">Discover farm-fresh vegetables, artisan bread, dairy essentials, and pantry staples in one flawless shopping experience.</p>
+              <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-success btn-lg" href="#products">Shop Now</a>
+                <a class="btn btn-outline-success btn-lg" href="#categories">Explore Products</a>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 order-1 order-lg-2">
+              <img src="{% static 'images/hero/hero-1.jpg' %}" class="hero-image" alt="Fresh grocery basket" />
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="row align-items-center g-4 g-lg-5 hero-slide">
+            <div class="col-12 col-lg-6 order-2 order-lg-1 hero-copy">
+              <span class="hero-badge mb-3">Mega Savings</span>
+              <h2 class="display-4 fw-bold mb-3">Big deals on your everyday favorites.</h2>
+              <p class="lead text-muted mb-4">Enjoy exclusive offers on fruits, snacks, dairy, and beverages with instant checkout and doorstep delivery.</p>
+              <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-success btn-lg" href="#offers">View Deals</a>
+                <a class="btn btn-outline-success btn-lg" href="#products">Browse Products</a>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 order-1 order-lg-2">
+              <img src="{% static 'images/hero/hero-2.jpg' %}" class="hero-image" alt="Fresh fruits and vegetables" />
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="row align-items-center g-4 g-lg-5 hero-slide">
+            <div class="col-12 col-lg-6 order-2 order-lg-1 hero-copy">
+              <span class="hero-badge mb-3">Fast Delivery</span>
+              <h2 class="display-4 fw-bold mb-3">Premium grocery shopping in minutes.</h2>
+              <p class="lead text-muted mb-4">From breakfasts to dinner parties, PrimeBasket keeps your kitchen stocked with quality essentials, fast.</p>
+              <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-success btn-lg" href="#products">Start Shopping</a>
+                <a class="btn btn-outline-success btn-lg" href="#about">Learn More</a>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 order-1 order-lg-2">
+              <img src="{% static 'images/hero/hero-3.jpg' %}" class="hero-image" alt="Premium grocery shopping bag" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing" id="categories">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="section-label">Popular Categories</span>
+      <h2 class="fw-bold mt-2">Shop by category</h2>
+      <p class="text-muted">Everything you need for a healthy, convenient home.</p>
+    </div>
+
+    <div class="row g-3 g-md-4">
+      {% for cat in category_cards %}
+      <div class="col-6 col-md-4 col-xl-3">
+        <a href="#products" class="card category-card h-100 border-0 reveal text-decoration-none" data-explore-category="{{ cat.name }}">
+          <div class="card-img-top">
+            <img src="{{ cat.image_url }}" alt="{{ cat.name }}" loading="lazy" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ cat.name }}</h5>
+            {% if cat.description %}<p class="card-text text-muted">{{ cat.description }}</p>{% endif %}
+            <span class="category-explore">Explore <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing" id="products">
+  <div class="container">
+    <div class="section-heading d-flex justify-content-between align-items-md-end flex-wrap gap-3 mb-4">
+      <div>
+        <span class="section-label">Featured Products</span>
+        <h2 class="fw-bold mt-2">Popular picks for your basket</h2>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <label for="sortProducts" class="text-muted small mb-0">Sort by</label>
+        <select class="form-select form-select-sm sort-select" id="sortProducts">
+          <option value="default">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating-desc">Rating: High to Low</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="category-filter-bar d-flex flex-wrap gap-2 mb-4" id="categoryFilterBar" role="group" aria-label="Filter products by category">
+      <button type="button" class="btn btn-sm btn-success category-filter-btn active" data-category="all">All</button>
+      {% for cat in categories %}
+      <button type="button" class="btn btn-sm btn-outline-success category-filter-btn" data-category="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+
+    <p class="text-muted d-none" id="noProductsMessage">No products match your search or category filter.</p>
+
+    <div class="row g-3 g-md-4" id="productsGrid">
+      {% for product in products %}
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card product-card h-100 border-0 reveal" data-product-name="{{ product.name }}" data-category="{{ product.category }}" data-in-stock="{{ product.in_stock|yesno:'true,false' }}" data-rating="{{ product.rating }}" data-price="{{ product.price }}">
+          <div class="card-img-top position-relative">
+            <a href="{% url 'product_detail' product.id %}" aria-label="View {{ product.name }}">
+              <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy" />
+            </a>
+            {% if product.discount_label %}<span class="discount-badge">{{ product.discount_label }}</span>{% endif %}
+            <button class="wishlist-btn btn btn-light rounded-circle" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              {% if product.stars %}
+              <div class="rating-stars">
+                {% for cls in product.stars %}<i class="bi {{ cls }}"></i>{% endfor %}
+              </div>
+              <span class="text-muted small">{{ product.rating }}</span>
+              {% else %}
+              <span class="text-muted small">No ratings yet</span>
+              {% endif %}
+            </div>
+            <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-reset"><h5 class="fw-bold product-title">{{ product.name }}</h5></a>
+            <p class="text-muted small product-desc">{{ product.short_description }}</p>
+            <div class="price-row mb-2">
+              <span class="price">${{ product.price }}</span>
+              {% if product.old_price > product.price %}<span class="old-price">${{ product.old_price }}</span>{% endif %}
+              <span class="unit-label">{{ product.unit }}</span>
+            </div>
+            {% if not product.in_stock %}
+            <span class="badge bg-danger-subtle text-danger stock-badge mb-2">Out of Stock</span>
+            {% elif product.stock_qty <= 10 %}
+            <span class="badge stock-badge stock-badge--low mb-2">Only {{ product.stock_qty }} left</span>
+            {% else %}
+            <span class="badge bg-success-subtle text-success stock-badge mb-2">In Stock</span>
+            {% endif %}
+            <div class="product-actions mt-auto">
+              <div class="quantity-selector">
+                <button class="qty-btn" type="button" aria-label="Decrease quantity" {% if not product.in_stock %}disabled{% endif %}>-</button>
+                <span class="qty-value">1</span>
+                <button class="qty-btn" type="button" aria-label="Increase quantity" {% if not product.in_stock %}disabled{% endif %}>+</button>
+              </div>
+              <button class="btn btn-success btn-sm add-to-cart" type="button" {% if not product.in_stock %}disabled{% endif %}>{% if product.in_stock %}Add to Cart{% else %}Unavailable{% endif %}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing" id="offers">
+  <div class="container">
+    <div class="offer-banner rounded-4 text-white reveal">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="hero-badge hero-badge--gold mb-3">Flash Sale</span>
+          <h2 class="fw-bold mb-3 text-white">Save up to 40% on your weekly groceries.</h2>
+          <p class="mb-4 offer-copy">Limited-time deals on fruits, dairy, snacks, and pantry essentials. Order before the countdown ends.</p>
+          <a class="btn btn-gold" href="#products">Shop Now</a>
+        </div>
+        <div class="col-lg-5 text-center">
+          <div class="countdown-box">
+            <div class="countdown-item">
+              <span id="days">03</span>
+              <small>Days</small>
+            </div>
+            <div class="countdown-item">
+              <span id="hours">12</span>
+              <small>Hours</small>
+            </div>
+            <div class="countdown-item">
+              <span id="minutes">45</span>
+              <small>Minutes</small>
+            </div>
+            <div class="countdown-item">
+              <span id="seconds">20</span>
+              <small>Seconds</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing" id="about">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="section-label">Why Choose PrimeBasket</span>
+      <h2 class="fw-bold mt-2">A smarter way to shop groceries</h2>
+      <p class="text-muted">Premium service designed around speed, trust, and convenience.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="card feature-card h-100 border-0 shadow-sm reveal">
+          <div class="card-body text-center">
+            <div class="feature-icon"><i class="bi bi-egg-fried"></i></div>
+            <h5 class="fw-bold">Fresh Products</h5>
+            <p class="text-muted">Handpicked groceries with unbeatable quality and freshness.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card feature-card h-100 border-0 shadow-sm reveal">
+          <div class="card-body text-center">
+            <div class="feature-icon"><i class="bi bi-truck"></i></div>
+            <h5 class="fw-bold">Fast Delivery</h5>
+            <p class="text-muted">Rapid dispatch and doorstep delivery when you need it.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card feature-card h-100 border-0 shadow-sm reveal">
+          <div class="card-body text-center">
+            <div class="feature-icon"><i class="bi bi-shield-lock"></i></div>
+            <h5 class="fw-bold">Secure Payment</h5>
+            <p class="text-muted">Protected transactions with multiple trusted payment options.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card feature-card h-100 border-0 shadow-sm reveal">
+          <div class="card-body text-center">
+            <div class="feature-icon"><i class="bi bi-headset"></i></div>
+            <h5 class="fw-bold">24/7 Support</h5>
+            <p class="text-muted">Friendly customer service available anytime for your questions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing" id="reviews">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="section-label">Testimonials</span>
+      <h2 class="fw-bold mt-2">Loved by hundreds of happy shoppers</h2>
+    </div>
+
+    <div id="testimonialCarousel" class="carousel slide testimonial-carousel" data-bs-ride="carousel" data-bs-interval="6000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="card testimonial-card border-0 shadow-sm reveal">
+            <div class="card-body text-center">
+              <div class="testimonial-avatar" aria-hidden="true">AK</div>
+              <h5 class="fw-bold mt-3">Amina K.</h5>
+              <p class="text-success fw-semibold">Home Chef</p>
+              <p class="text-muted">“PrimeBasket makes my grocery runs effortless. The produce is always fresh and the delivery is incredibly fast.”</p>
+              <div class="rating-stars text-warning">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="card testimonial-card border-0 shadow-sm reveal">
+            <div class="card-body text-center">
+              <div class="testimonial-avatar" aria-hidden="true">DO</div>
+              <h5 class="fw-bold mt-3">Daniel O.</h5>
+              <p class="text-success fw-semibold">Busy Parent</p>
+              <p class="text-muted">“The category selection is excellent and the offers are genuinely helpful for our family budget.”</p>
+              <div class="rating-stars text-warning">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="card testimonial-card border-0 shadow-sm reveal">
+            <div class="card-body text-center">
+              <div class="testimonial-avatar" aria-hidden="true">GN</div>
+              <h5 class="fw-bold mt-3">Grace N.</h5>
+              <p class="text-success fw-semibold">Fitness Enthusiast</p>
+              <p class="text-muted">“I love the healthy product lineup and polished shopping experience. It feels premium from start to finish.”</p>
+              <div class="rating-stars text-warning">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing">
+  <div class="container">
+    <div class="newsletter-card rounded-4 reveal">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="section-label">Stay in the Loop</span>
+          <h2 class="fw-bold mt-2">Subscribe for fresh deals and weekly offers.</h2>
+          <p class="text-muted mb-0">Join thousands of subscribers who get premium grocery updates first.</p>
+        </div>
+        <div class="col-lg-5">
+          <form id="newsletterForm" class="d-flex flex-column flex-sm-row gap-2" novalidate>
+            <input class="form-control" type="email" id="newsletterEmail" placeholder="Enter your email" aria-label="Email address" required />
+            <button class="btn btn-success" type="submit">Subscribe</button>
+          </form>
+          <div class="form-text mt-2" id="newsletterMessage" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

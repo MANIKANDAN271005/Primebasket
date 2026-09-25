@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | Order Confirmed{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm text-center p-5">
+          <i class="bi bi-check-circle-fill text-success display-1 mb-3"></i>
+          <h1 class="fw-bold">Thank you! Your order is confirmed.</h1>
+          <p class="text-muted">Order <strong>{{ order.order_id }}</strong> has been placed successfully. A summary is below.</p>
+
+          <div class="text-start bg-light rounded-4 p-4 mt-4">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Order number</span>
+              <span class="fw-semibold">{{ order.order_id }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Payment method</span>
+              <span class="fw-semibold">{% if order.payment_method == "card" %}Credit / Debit Card{% else %}Cash on Delivery{% endif %}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Delivery address</span>
+              <span class="fw-semibold text-end">{{ order.address.line1 }}, {{ order.address.city }}</span>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between fw-bold fs-5">
+              <span>Total paid</span>
+              <span class="text-success">${{ order.total }}</span>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+            <a href="{% url 'order_detail' order.order_id %}" class="btn btn-success">
+              <i class="bi bi-receipt me-2"></i>Track This Order
+            </a>
+            <a href="{% url 'home' %}" class="btn btn-outline-success">
+              <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

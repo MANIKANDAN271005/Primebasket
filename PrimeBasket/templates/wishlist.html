@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | My Wishlist{% endblock %}
+
+{% block content %}
+<section class="wishlist-hero py-5">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-12 col-lg-6">
+        <h1 class="display-5 fw-bold">My Wishlist</h1>
+        <p class="lead text-muted mt-3">
+          Save your favorite products and buy them later. Your wishlist is saved to your account, so
+          it's here whenever you sign back in.
+        </p>
+        <a href="{% url 'home' %}" class="btn btn-success btn-lg mt-3">
+          <i class="bi bi-arrow-left"></i> Continue Shopping
+        </a>
+      </div>
+      <div class="col-12 col-lg-6 text-center">
+        <img src="{% static 'images/misc/wishlist.jpg' %}" class="hero-image" alt="Basket of fresh fruit" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h2 class="fw-bold mb-4">Saved Products</h2>
+
+        <!-- Empty Wishlist -->
+        <div id="emptyWishlist" class="text-center py-5">
+          <div class="empty-state-icon mb-4" aria-hidden="true"><i class="bi bi-heart"></i></div>
+          <h3 class="fw-bold">Your Wishlist is Empty</h3>
+          <p class="text-muted">Save products that you love and they'll appear here.</p>
+          <a href="{% url 'home' %}" class="btn btn-success mt-3">
+            <i class="bi bi-bag-fill"></i> Start Shopping
+          </a>
+        </div>
+
+        <!-- Wishlist Table -->
+        <div class="table-responsive" id="wishlistTableContainer" style="display:none;">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="wishlistItems">
+              <!-- JavaScript will load products here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Wishlist Summary -->
+        <div class="row mt-4" id="wishlistSummary" style="display:none;">
+          <div class="col-md-6">
+            <h5>Total Saved Products : <span class="text-success" id="totalWishlistItems">0</span></h5>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <button id="clearWishlist" class="btn btn-outline-danger me-2">
+              <i class="bi bi-trash3-fill"></i> Clear Wishlist
+            </button>
+            <button class="btn btn-success" id="moveAllToCart">
+              <i class="bi bi-cart-fill"></i> Move All To Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

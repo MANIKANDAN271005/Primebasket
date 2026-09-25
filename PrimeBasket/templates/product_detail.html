@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PrimeBasket | {{ product.name }}{% endblock %}
+
+{% block content %}
+<section class="section-spacing pb-0 pt-4">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb pd-breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}#products">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="card product-card product-card--detail border-0 shadow-sm reveal" data-product-name="{{ product.name }}" data-category="{{ product.category }}" data-in-stock="{{ product.in_stock|yesno:'true,false' }}" data-recently-viewed-id="{{ product.id }}">
+      <div class="row g-0">
+        <div class="col-12 col-lg-6">
+          <div class="pd-frame">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" />
+            {% if product.discount_label %}<span class="discount-badge">{{ product.discount_label }}</span>{% endif %}
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="card-body pd-body h-100 d-flex flex-column">
+            <span class="section-label align-self-start mb-2">{{ product.category }}</span>
+            <h1 class="fw-bold mb-2">{{ product.name }}</h1>
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+              {% if product.stars %}
+              <div class="rating-stars">
+                {% for cls in product.stars %}<i class="bi {{ cls }}"></i>{% endfor %}
+              </div>
+              <span class="text-muted small">{{ product.rating }} ({{ product.reviews }} reviews)</span>
+              {% else %}
+              <span class="text-muted small">No ratings yet</span>
+              {% endif %}
+            </div>
+
+            <p class="text-muted">{{ product.description }}</p>
+
+            <ul class="pd-highlights list-unstyled mb-2">
+              {% for point in product.highlights %}
+              <li><i class="bi bi-check-circle-fill text-success me-2"></i>{{ point }}</li>
+              {% endfor %}
+            </ul>
+
+            <div class="price-row mb-3">
+              <span class="price fs-3">${{ product.price }}</span>
+              {% if product.old_price > product.price %}<span class="old-price">${{ product.old_price }}</span>{% endif %}
+              <span class="unit-label">per {{ product.unit }}</span>
+            </div>
+
+            <div class="mb-3">
+              {% if not product.in_stock %}
+              <span class="badge bg-danger-subtle text-danger stock-badge">Out of Stock</span>
+              {% elif product.stock_qty <= 10 %}
+              <span class="badge bg-warning-subtle text-warning stock-badge">Only {{ product.stock_qty }} left in stock</span>
+              {% else %}
+              <span class="badge bg-success-subtle text-success stock-badge">In Stock</span>
+              {% endif %}
+            </div>
+
+            <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+              <span class="fw-semibold">Quantity</span>
+              <div class="quantity-selector">
+                <button class="qty-btn" type="button" aria-label="Decrease quantity" {% if not product.in_stock %}disabled{% endif %}>-</button>
+                <span class="qty-value">1</span>
+                <button class="qty-btn" type="button" aria-label="Increase quantity" {% if not product.in_stock %}disabled{% endif %}>+</button>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mt-auto">
+              <button class="btn btn-success btn-lg px-4 add-to-cart" type="button" {% if not product.in_stock %}disabled{% endif %}>
+                <i class="bi bi-bag-plus me-2"></i>{% if product.in_stock %}Add to Cart{% else %}Out of Stock{% endif %}
+              </button>
+              <button class="wishlist-btn wishlist-btn--inline btn btn-outline-success btn-lg px-4" type="button">
+                <i class="bi bi-heart me-2"></i>Add to Wishlist
+              </button>
+            </div>
+
+            <div class="row g-3 mt-4 pd-trust-row">
+              <div class="col-4 text-center">
+                <i class="bi bi-truck fs-4 text-primary"></i>
+                <p class="small text-muted mb-0 mt-1">Fast Delivery</p>
+              </div>
+              <div class="col-4 text-center">
+                <i class="bi bi-arrow-repeat fs-4 text-primary"></i>
+                <p class="small text-muted mb-0 mt-1">Easy Returns</p>
+              </div>
+              <div class="col-4 text-center">
+                <i class="bi bi-shield-check fs-4 text-primary"></i>
+                <p class="small text-muted mb-0 mt-1">Secure Payment</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing">
+  <div class="container">
+    <div class="section-heading mb-4">
+      <span class="section-label">Customer Reviews</span>
+      <h2 class="fw-bold mt-2">What shoppers are saying</h2>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="d-flex flex-column gap-3" id="reviewsList">
+          {% for review in product_reviews %}
+          <div class="review-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong>{{ review.reviewer_name }}</strong>
+              <div class="rating-stars small">
+                {% for i in "12345" %}<i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>{% endfor %}
+              </div>
+            </div>
+            <p class="text-muted mb-0">{{ review.comment }}</p>
+          </div>
+          {% empty %}
+          <p class="text-muted">No reviews yet. Be the first to share your experience with this product.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm p-4">
+          <h5 class="fw-bold mb-3">Write a Review</h5>
+          {% if can_review %}
+          <form id="reviewForm" data-product-id="{{ product.id }}" novalidate>
+            {% csrf_token %}
+            <label class="form-label d-block">Your rating</label>
+            <div class="star-input mb-3" id="starInput">
+              <i class="bi bi-star" data-value="1"></i>
+              <i class="bi bi-star" data-value="2"></i>
+              <i class="bi bi-star" data-value="3"></i>
+              <i class="bi bi-star" data-value="4"></i>
+              <i class="bi bi-star" data-value="5"></i>
+            </div>
+            <input type="hidden" id="reviewRating" value="0" />
+            <textarea class="form-control mb-3" id="reviewComment" rows="3" placeholder="Share your thoughts about this product..."></textarea>
+            <button type="submit" class="btn btn-success w-100">Submit Review</button>
+            <div id="reviewMessage" class="form-text mt-2" aria-live="polite"></div>
+          </form>
+          {% else %}
+          <p class="text-muted mb-3">Please log in to write a review.</p>
+          <a href="{% url 'login' %}" class="btn btn-outline-success w-100">Login to Review</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-spacing d-none" id="recentlyViewedSection">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="section-label">Recently Viewed</span>
+      <h2 class="fw-bold mt-2">Pick up where you left off</h2>
+    </div>
+    <div class="row g-4" id="recentlyViewedGrid"></div>
+  </div>
+</section>
+
+{% if related_products %}
+<section class="section-spacing">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="section-label">You May Also Like</span>
+      <h2 class="fw-bold mt-2">More products to explore</h2>
+    </div>
+
+    <div class="row g-4">
+      {% for rp in related_products %}
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card product-card h-100 border-0 reveal" data-product-name="{{ rp.name }}" data-category="{{ rp.category }}" data-in-stock="{{ rp.in_stock|yesno:'true,false' }}">
+          <div class="card-img-top position-relative">
+            <a href="{% url 'product_detail' rp.id %}" aria-label="View {{ rp.name }}">
+              <img src="{{ rp.image_url }}" alt="{{ rp.name }}" loading="lazy" />
+            </a>
+            {% if rp.discount_label %}<span class="discount-badge">{{ rp.discount_label }}</span>{% endif %}
+            <button class="wishlist-btn btn btn-light rounded-circle" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              {% if rp.stars %}
+              <div class="rating-stars">
+                {% for cls in rp.stars %}<i class="bi {{ cls }}"></i>{% endfor %}
+              </div>
+              <span class="text-muted small">{{ rp.rating }}</span>
+              {% else %}
+              <span class="text-muted small">No ratings yet</span>
+              {% endif %}
+            </div>
+            <a href="{% url 'product_detail' rp.id %}" class="text-decoration-none text-reset">
+              <h5 class="fw-bold product-title">{{ rp.name }}</h5>
+            </a>
+            <p class="text-muted small product-desc">{{ rp.short_description }}</p>
+            <div class="price-row mb-3">
+              <span class="price">${{ rp.price }}</span>
+              {% if rp.old_price > rp.price %}<span class="old-price">${{ rp.old_price }}</span>{% endif %}
+              <span class="unit-label">{{ rp.unit }}</span>
+            </div>
+            <div class="product-actions mt-auto">
+              <div class="quantity-selector">
+                <button class="qty-btn" type="button" aria-label="Decrease quantity" {% if not rp.in_stock %}disabled{% endif %}>-</button>
+                <span class="qty-value">1</span>
+                <button class="qty-btn" type="button" aria-label="Increase quantity" {% if not rp.in_stock %}disabled{% endif %}>+</button>
+              </div>
+              <button class="btn btn-success btn-sm add-to-cart" type="button" {% if not rp.in_stock %}disabled{% endif %}>{% if rp.in_stock %}Add to Cart{% else %}Unavailable{% endif %}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
